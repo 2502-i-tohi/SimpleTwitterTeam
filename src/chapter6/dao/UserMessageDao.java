@@ -38,52 +38,42 @@ public class UserMessageDao {
 
 			if (!StringUtils.isBlank(searchWord)) {
 				sql.append(" AND messages.text like ? ");
-			}
+	 		}
 
 			sql.append("ORDER BY created_date DESC limit " + num);
 			ps = connection.prepareStatement(sql.toString());
 			ps.setString(1, start);
 			ps.setString(2, end);
 
-			if(likeSearch != null) {
-				if(likeSearch.equals("startFrom")) {
-					if(userId != null) {
-						ps.setInt(3, userId);
+			if(userId != null) {
+				ps.setInt(3, userId);
 
-						if (!StringUtils.isBlank(searchWord)) {
-							ps.setString(4, searchWord + "%");
-						}
+				if (!StringUtils.isBlank(searchWord)) {
+					if (likeSearch.equals("startFrom")) {
+						ps.setString(4, searchWord + "%");
 					} else {
-						if (!StringUtils.isBlank(searchWord)) {
-							ps.setString(3, searchWord + "%");
-						}
+						ps.setString(4, "%" + searchWord + "%");
 					}
-				} else if(likeSearch.equals("contain")) {
-					if(userId != null) {
-						ps.setInt(3, userId);
-
-						if (!StringUtils.isBlank(searchWord)) {
-							ps.setString(4, "%" + searchWord + "%");
-						}
+				}
+			} else {
+				if (!StringUtils.isBlank(searchWord)) {
+					if (likeSearch.equals("startFrom")) {
+						ps.setString(3, searchWord + "%");
 					} else {
-						if (!StringUtils.isBlank(searchWord)) {
-							ps.setString(3, "%" + searchWord + "%");
-						}
+						ps.setString(3, "%" + searchWord + "%");
 					}
 				}
 			}
 
-
-            ResultSet rs = ps.executeQuery();
-
-            List<UserMessage> messages = toUserMessages(rs);
-            return messages;
-        } catch (SQLException e) {
-            throw new SQLRuntimeException(e);
-        } finally {
-            close(ps);
-        }
-    }
+			ResultSet rs = ps.executeQuery();
+			List<UserMessage> messages = toUserMessages(rs);
+			return messages;
+		} catch (SQLException e) {
+			throw new SQLRuntimeException(e);
+		} finally {
+			close(ps);
+		}
+	}
 
     private List<UserMessage> toUserMessages(ResultSet rs) throws SQLException {
 

@@ -22,7 +22,7 @@ public class TopServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
 
-
+    	request.setCharacterEncoding("UTF-8");
         boolean isShowMessageForm = false;
         User user = (User) request.getSession().getAttribute("loginUser");
         if (user != null) {
@@ -41,6 +41,7 @@ public class TopServlet extends HttpServlet {
 
         request.setAttribute("start", start);
         request.setAttribute("end", end);
+        request.setAttribute("searchWord", request.getParameter("word"));
         request.setAttribute("messages", messages);
         request.setAttribute("comments", comments);
         request.setAttribute("isShowMessageForm", isShowMessageForm);

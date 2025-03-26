@@ -46,7 +46,6 @@ public class MessageService {
     			id = Integer.parseInt(userId);
     		}
 
-
             //絞り込み(startが入力されていたら)
             if(!StringUtils.isBlank(start)) {
             	start += " 00:00:00";

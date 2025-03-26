@@ -49,6 +49,7 @@
 			</ul>
 		</div>
 		<c:remove var="errorMessages" scope="session" />
+
 	</c:if>
 
 	<form action="./" method="get">
@@ -58,9 +59,12 @@
 	</form>
 	<div class="search">
 		<form action="./" action="get">
-			つぶやき： <input type="text" name="word" value="${searchWord}" /> <input
-				type="radio" name="radiobutton" value="contain" checked="checked">
-			を含む <input type="submit" value="検索">
+			つぶやき： <input type="text" name="word" value="${searchWord}" />
+			<input type="radio" name="radiobutton" value="startFrom" checked="checked">
+			から始まる
+			<input type="radio" name="radiobutton" value="contain">
+			を含む
+			<input type="submit" value="検索">
 		</form>
 	</div>
 

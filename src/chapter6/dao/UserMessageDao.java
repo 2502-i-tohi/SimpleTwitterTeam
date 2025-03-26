@@ -26,7 +26,8 @@ public class UserMessageDao {
 			sql.append(" messages.user_id as user_id, ");
 			sql.append(" users.account as account, ");
 			sql.append(" users.name as name, ");
-			sql.append(" messages.created_date as created_date ");  sql.append("FROM messages ");
+			sql.append(" messages.created_date as created_date ");
+			sql.append("FROM messages ");
 			sql.append("INNER JOIN users ");
 			sql.append("ON messages.user_id = users.id ");
 			sql.append("WHERE messages.created_date BETWEEN ? AND ? ");
@@ -44,17 +45,35 @@ public class UserMessageDao {
 			ps.setString(1, start);
 			ps.setString(2, end);
 
-			if(userId != null) {
-				ps.setInt(3, userId);
+			if(likeSearch != null) {
+				if(likeSearch.equals("startFrom")) {
+					if(userId != null) {
+						ps.setInt(3, userId);
 
-				if (!StringUtils.isBlank(searchWord)) {
-					ps.setString(4, "%" + searchWord + "%");
-				}
-			} else {
-				if (!StringUtils.isBlank(searchWord)) {
-					ps.setString(3, "%" + searchWord + "%");
+						if (!StringUtils.isBlank(searchWord)) {
+							ps.setString(4, searchWord + "%");
+						}
+					} else {
+						if (!StringUtils.isBlank(searchWord)) {
+							ps.setString(3, searchWord + "%");
+						}
+					}
+				} else if(likeSearch.equals("contain")) {
+					if(userId != null) {
+						ps.setInt(3, userId);
+
+						if (!StringUtils.isBlank(searchWord)) {
+							ps.setString(4, "%" + searchWord + "%");
+						}
+					} else {
+						if (!StringUtils.isBlank(searchWord)) {
+							ps.setString(3, "%" + searchWord + "%");
+						}
+					}
 				}
 			}
+
+
             ResultSet rs = ps.executeQuery();
 
             List<UserMessage> messages = toUserMessages(rs);
